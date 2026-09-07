@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070a08">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SIXFOLD">
+  <meta name="description" content="A standalone 16-week strength campaign with six missions, guided workouts, compliance tracking, and sealed rewards.">
+  <title>IRON LEDGER // SIXFOLD</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#app-main">Skip to training</a>
+
+  <div class="app-shell">
+    <aside class="desktop-rail" aria-label="Primary navigation">
+      <a class="brand-mark" href="#/today" aria-label="IRON LEDGER SIXFOLD home">
+        <span class="brand-glyph">VI</span>
+        <span><b>SIXFOLD</b><small>IRON LEDGER</small></span>
+      </a>
+      <nav class="rail-nav" data-nav></nav>
+      <div class="rail-footer">
+        <span id="rail-week">WEEK 01 / 16</span>
+        <button class="icon-button" id="install-app" type="button" hidden aria-label="Install IRON LEDGER">↓</button>
+      </div>
+    </aside>
+
+    <div class="app-column">
+      <header class="topbar">
+        <a class="mobile-brand" href="#/today"><b>SIXFOLD</b> <span>IRON LEDGER</span></a>
+        <div class="campaign-clock" aria-label="Campaign time remaining">
+          <span id="campaign-phase">FOUNDATION</span>
+          <b id="days-remaining">115 DAYS</b>
+        </div>
+        <button class="icon-button mobile-more" type="button" data-open-more aria-label="Open navigation">MENU</button>
+      </header>
+
+      <div class="ticker" aria-label="Live goal progress">
+        <div id="ticker-track"></div>
+      </div>
+
+      <main id="app-main" tabindex="-1" aria-live="polite"></main>
+    </div>
+  </div>
+
+  <nav class="mobile-nav" data-nav aria-label="Primary navigation"></nav>
+
+  <section class="rest-dock" id="rest-dock" hidden aria-live="polite">
+    <div>
+      <span>REST CLOCK</span>
+      <strong id="rest-time">03:00</strong>
+      <small id="rest-context">Next working set</small>
+    </div>
+    <div class="rest-actions">
+      <button type="button" data-rest-adjust="-30">−30</button>
+      <button type="button" data-rest-toggle>Pause</button>
+      <button type="button" data-rest-adjust="30">+30</button>
+      <button type="button" data-rest-skip>Skip</button>
+    </div>
+  </section>
+
+  <dialog id="set-dialog" class="modal">
+    <form method="dialog" id="set-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">LOG SET</span><h2 id="set-dialog-title">Working set</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="set-date">
+      <input type="hidden" id="set-exercise-id">
+      <input type="hidden" id="set-id">
+      <div class="form-grid two">
+        <label><span>Actual load</span><input id="set-load" type="number" min="0" step="0.5" inputmode="decimal"></label>
+        <label><span>Actual reps</span><input id="set-reps" type="number" min="0" step="1" inputmode="numeric"></label>
+        <label><span>RPE</span><input id="set-rpe" type="number" min="1" max="10" step="0.5" inputmode="decimal"></label>
+        <label><span>Pain 0–10</span><input id="set-pain" type="number" min="0" max="10" step="1" inputmode="numeric"></label>
+        <label><span>Rest after set (seconds)</span><input id="set-rest" type="number" min="15" max="900" step="15" inputmode="numeric"></label>
+      </div>
+      <label class="check-row"><input id="set-clean" type="checkbox" checked><span><b>Clean standard</b><small>Full prescribed range and no form breakdown</small></span></label>
+      <label><span>Note</span><textarea id="set-note" rows="2" placeholder="Optional cue, symptom, or context"></textarea></label>
+      <div class="modal-actions split">
+        <button class="button danger ghost" id="skip-set" type="button">Skip with reason</button>
+        <button class="button primary" id="save-set" type="submit" value="default">Save set + start rest</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="exercise-dialog" class="modal wide">
+    <form method="dialog" id="exercise-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">MODIFY PROGRAM</span><h2 id="exercise-dialog-title">Edit exercise</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="edit-date">
+      <input type="hidden" id="edit-exercise-id">
+      <div class="form-grid two">
+        <label class="span-two"><span>Exercise</span><input id="edit-name" type="text" maxlength="80" required></label>
+        <label><span>Sets</span><input id="edit-sets" type="number" min="1" max="12" step="1" required></label>
+        <label><span>Reps / set</span><input id="edit-reps" type="number" min="1" max="100" step="1" required></label>
+        <label><span>Load</span><input id="edit-load" type="number" min="0" step="0.5"></label>
+        <label><span>Rest seconds</span><input id="edit-rest" type="number" min="15" max="900" step="15" required></label>
+        <label><span>Target RPE</span><input id="edit-rpe" type="number" min="1" max="10" step="0.5" required></label>
+        <label><span>Substitute</span><select id="edit-substitute"></select></label>
+        <label class="span-two"><span>Technique cue</span><input id="edit-cue" type="text" maxlength="160"></label>
+        <label class="span-two"><span>Approved alternatives (comma separated)</span><input id="edit-alternatives" type="text" maxlength="300" placeholder="Neutral-grip option, machine option"></label>
+      </div>
+      <fieldset class="scope-field">
+        <legend>Apply this change to</legend>
+        <label><input type="radio" name="edit-scope" value="today" checked><span><b>Today only</b><small>Only this scheduled workout</small></span></label>
+        <label><input type="radio" name="edit-scope" value="future"><span><b>This and future dates</b><small>Preserves completed history</small></span></label>
+        <label><input type="radio" name="edit-scope" value="template"><span><b>Entire uncompleted template</b><small>Changes every future instance of this session</small></span></label>
+      </fieldset>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button primary" id="save-exercise" type="submit" value="default">Apply change</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="move-dialog" class="modal compact">
+    <form method="dialog" id="move-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">MOVE WORKOUT</span><h2>Choose a new day</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="move-from">
+      <label><span>New date in the same week</span><input id="move-to" type="date" required></label>
+      <p class="form-note" id="move-range"></p>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button primary" type="submit" value="default">Move workout</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="density-dialog" class="modal compact">
+    <form method="dialog" id="density-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">MINUTE LOG</span><h2 id="density-dialog-title">Pull-up minute</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="density-date">
+      <input type="hidden" id="density-exercise-id">
+      <input type="hidden" id="density-minute">
+      <div class="form-grid two">
+        <label><span>Strict reps</span><input id="density-reps" type="number" min="0" max="30" step="1" required></label>
+        <label><span>Grip</span><select id="density-grip"><option>Pronated</option><option>Neutral</option><option>Rings / free</option></select></label>
+        <label><span>Minute RPE</span><input id="density-rpe" type="number" min="1" max="10" step="0.5" value="7"></label>
+        <label><span>Pain 0–10</span><input id="density-pain" type="number" min="0" max="10" step="1" value="0"></label>
+      </div>
+      <label class="check-row"><input id="density-clean" type="checkbox" checked><span><b>Strict minute</b><small>Full extension, chin over bar, no kip</small></span></label>
+      <label><span>Note</span><input id="density-note" maxlength="120" placeholder="Grip, elbow, or pace note"></label>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button primary" type="submit" value="default">Save minute</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="evidence-dialog" class="modal">
+    <form method="dialog" id="evidence-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">VERIFIED ATTEMPT</span><h2 id="evidence-dialog-title">Log performance</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="evidence-goal-id">
+      <div class="form-grid two" id="strength-evidence-fields">
+        <label><span>Load</span><input id="evidence-load" type="number" min="0" step="0.5"></label>
+        <label><span>Reps</span><input id="evidence-reps" type="number" min="0" step="1"></label>
+        <label><span>RPE</span><input id="evidence-rpe" type="number" min="1" max="10" step="0.5"></label>
+        <label><span>Pain 0–10</span><input id="evidence-pain" type="number" min="0" max="10" step="1"></label>
+        <label id="evidence-next-day-wrap" hidden><span>Next-day pain 0–10</span><input id="evidence-next-day-pain" type="number" min="0" max="10" step="1"></label>
+      </div>
+      <div class="form-grid two" id="endurance-evidence-fields" hidden>
+        <label><span>Total pull-ups</span><input id="evidence-total" type="number" min="0" step="1"></label>
+        <label><span>Minutes</span><input id="evidence-duration" type="number" min="1" max="60" step="1"></label>
+      </div>
+      <label class="check-row"><input id="evidence-clean" type="checkbox" checked><span><b>Strict and verified</b><small>No kipping, shortened range, or invalid assistance</small></span></label>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button primary" id="save-evidence" type="submit" value="default">Save attempt</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="swap-dialog" class="modal">
+    <form method="dialog" id="swap-form">
+      <div class="modal-head">
+        <div><span class="eyebrow">EQUAL-VALUE SWAP</span><h2>Choose your replacement</h2></div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="swap-week">
+      <label><span>Replacement reward</span><input id="swap-title" type="text" maxlength="100" required></label>
+      <label><span>Reason it improves your life</span><textarea id="swap-reason" rows="3" maxlength="240" required></textarea></label>
+      <p class="form-note" id="swap-limit"></p>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button primary" type="submit" value="default">Lock swap</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="more-dialog" class="more-sheet">
+    <div class="modal-head">
+      <div><span class="eyebrow">IRON LEDGER // SIXFOLD</span><h2>Command menu</h2></div>
+      <button class="icon-button" type="button" data-close-more aria-label="Close">×</button>
+    </div>
+    <nav id="more-nav" aria-label="Additional navigation"></nav>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="modal compact">
+    <form method="dialog">
+      <span class="eyebrow">CONFIRM ACTION</span>
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p id="confirm-copy"></p>
+      <div class="modal-actions"><button class="button ghost" value="cancel">Cancel</button><button class="button danger" id="confirm-action" value="default">Confirm</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast-stack" id="toast-stack" aria-live="assertive"></div>
+  <input id="restore-input" type="file" accept="application/json,.json" hidden>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
