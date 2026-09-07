@@ -1,4 +1,4 @@
-const CACHE = "iron-ledger-sixfold-v2";
+const CACHE = "iron-ledger-sixfold-v3";
 const SHELL = [
   "./",
   "./index.html",

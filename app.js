@@ -496,7 +496,7 @@ function renderWorkout(date) {
   app.innerHTML = `<section class="route">
     <article class="panel workout-head" data-week="${session.summit ? "S" : String(session.week).padStart(2, "0")}">
       <a class="route-back" href="#/calendar">← Campaign calendar</a>
-      <div class="workout-title-row"><div><span class="eyebrow">${h(formatDate(date, { weekday: "long", month: "long", year: true }))} · ${h(phase.name)}</span><h1>${h(session.name)}</h1><p class="muted">${h(session.focus)}</p>${session.movedFrom ? `<p class="form-note">Moved from ${h(formatDate(session.movedFrom, { weekday: "long", month: "long" }))}; plan identity preserved.</p>` : ""}</div>${statusPill(session)}</div>
+      <div class="workout-title-row"><div><span class="eyebrow">${h(formatDate(date, { weekday: "long", month: "long", year: "numeric" }))} · ${h(phase.name)}</span><h1>${h(session.name)}</h1><p class="muted">${h(session.focus)}</p>${session.movedFrom ? `<p class="form-note">Moved from ${h(formatDate(session.movedFrom, { weekday: "long", month: "long" }))}; plan identity preserved.</p>` : ""}</div>${statusPill(session)}</div>
       <div class="session-duration"><span>FULL SESSION ESTIMATE</span><strong>${h(session.duration || "60–90 min")}</strong><small>Individual 04:00 labels below mean rest after a heavy set—not workout length.</small></div>
       <div class="workout-steps">${steps.map((step, index) => `<span class="workout-step ${index === stepIndex ? "active" : ""} ${index < stepIndex || session.status === "complete" ? "done" : ""}">${index + 1} · ${step}</span>`).join("")}</div>
       <div class="actions workout-controls">

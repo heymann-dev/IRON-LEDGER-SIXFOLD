@@ -2,7 +2,7 @@
 
 Authoritative source audited: `IRON_LEDGER_16_WEEK_BUILD_BRIEF.docx` (10 pages).  
 Campaign: September 7–December 31, 2026.  
-Automated result: **94 assertions passed across all 12 acceptance areas.**
+Automated result: **95 assertions passed across all 12 acceptance areas.**
 
 | # | Required outcome | Result | Evidence in this build |
 |---|---|---|---|
@@ -32,5 +32,5 @@ node ./scripts/verify.mjs
 Expected result:
 
 ```text
-SIXFOLD acceptance verification passed: 94 assertions across all 12 brief criteria.
+SIXFOLD acceptance verification passed: 95 assertions across all 12 brief criteria.
 ```

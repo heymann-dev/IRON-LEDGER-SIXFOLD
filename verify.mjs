@@ -147,6 +147,7 @@ assert.equal(manifest.display, "standalone"); checks += 1;
 assert.equal(manifest.short_name, "SIXFOLD"); checks += 1;
 verify(files["service-worker.js"].includes('caches.match("./index.html")'), "Service worker needs an offline route fallback");
 verify(files["app.js"].includes("FULL SESSION ESTIMATE") && files["app.js"].includes("REST AFTER SET"), "Mobile timing must distinguish session duration from rest");
+verify(!files["app.js"].includes("year: true"), "Workout routes must use valid Intl.DateTimeFormat year options");
 for (const control of ["data-start-set", "data-log-set", "data-density-clock", "data-density-minute", "data-density-finish"]) verify(files["app.js"].includes(control), `Missing guided control: ${control}`);
 
 // 11. Clickable calendar, collapsible columns, review reopening, and reward recalculation hooks.
